@@ -2,16 +2,16 @@ import os
 from matplotlib import pyplot
 import pandas as pd
 from functools import reduce
-'''
+
 out_path = r'D:\LocalData\FJT02454\Desktop\logAnalyze\\'
 pic_path=r'D:\LocalData\FJT02454\Desktop\logAnalyze\\'
 newLineCode = '\n'
-'''
 
+'''
 out_path = '/export/measure/maintenance/'
 newLineCode = '\r\n'
 pic_path='/export/measure/pic/'
-
+'''
 
 def logAnalyze(fileType,line ,analyze_datetime):
     OutputList=[]
@@ -94,6 +94,7 @@ def logAnalyze(fileType,line ,analyze_datetime):
 
 
 def create_Pic(fileType,analyze_datetime):
+    value=[]
     jobtype=('ZIP取り込み       ','ZIPファイル展開   ','ファイル変換      ','可読化ファイル結合','可読化ファイル連携')
     jobtype_Name=('getZIP','extractZIP','transformFile','joinFile','sendToHdfs')
     logName = fileType+'_'+analyze_datetime+'.log'
@@ -114,12 +115,10 @@ def create_Pic(fileType,analyze_datetime):
         min_value = min(during_time)
         avr_value = sum(during_time) / len(during_time)
         statistic_path = pic_path+'ProbeJob_Statistic.txt'
-        with open(statistic_path, "a+", encoding='utf-8') as file:
-            file.write(fileType +'   '+analyze_datetime+'['+str.strip(jobtype[jobCount])+']'+'実行時間統計' + newLineCode)
-            file.write('    最大実行時間：'+str(max_value)+ newLineCode)
-            file.write('    最小実行時間：' + str(min_value)+ newLineCode)
-            file.write('    平均実行時間：' + str(min_value)+ newLineCode)
 
+        name_Index=fileType +'   '+'['+str.strip(jobtype[jobCount])+']'
+        value.append('%-30s %-5s %-5s %-5s' % (name_Index,str(min_value),str(max_value),str(avr_value)),)
+        #value.append('{:10} {:5} {:5} {:5}'.format (name_Index,str(min_value),str(max_value),str(avr_value)))
         jobinfo["due"].plot(kind='kde')
         pyplot.grid(True)
         pyplot.text(5, 5, jobinfo.describe())
@@ -127,6 +126,20 @@ def create_Pic(fileType,analyze_datetime):
         pic_name=fileType+'_'+jobtype_Name[jobCount]+'_pic.png'
         pyplot.savefig(pic_path+pic_name)
         pyplot.close()
+
+        print(value)
+        if len(value)>0:
+            with open(statistic_path, "a+") as file:
+                for ls in value:
+                    file.write(ls+str(max_value)+ newLineCode)
+
+    '''
+        with open(statistic_path, "a+", encoding='utf-8') as file:
+            file.write(fileType +'   '+analyze_datetime+'['+str.strip(jobtype[jobCount])+']'+'実行時間統計' + newLineCode)
+            file.write('    最大実行時間：'+str(max_value)+ newLineCode)
+            file.write('    最小実行時間：' + str(min_value)+ newLineCode)
+            file.write('    平均実行時間：' + str(avr_value)+ newLineCode)
+     '''
 
 def timeCaculation(list_s, list_e):
     return (list_e[1]-list_s[1]).seconds

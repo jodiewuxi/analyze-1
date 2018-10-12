@@ -1,4 +1,4 @@
-import utility_new
+import utility_new_ver1
 import sys
 import datetime
 import os
@@ -39,6 +39,7 @@ def main(log_time):
     gen1line = []
     gen2line = []
     sxmline = []
+    gen2kline = []
     # get logfile list
     for file in os.listdir(log_file_path):
         if fnmatch.fnmatch(file, 'Applinfo.log.[1-9]') or file=='Applinfo.log':
@@ -47,31 +48,35 @@ def main(log_time):
                 data = file.read()
                 logline = data.split('\n')
             # open log file
-            cwline.extend(list(filter(lambda x: ('CW ' + log_time) in x, logline)))
-            gen1line.extend(list(filter(lambda x: ('GEN1 ' + log_time) in x, logline)))
-            gen2line.extend(list(filter(lambda x: ('GEN2 ' + log_time) in x, logline)))
-            sxmline.extend(list(filter(lambda x: ('SXM ' + log_time) in x, logline)))
+            cwline.extend(list(filter(lambda x: ('TLDP002 CW ' + log_time) in x, logline)))
+            gen1line.extend(list(filter(lambda x: ('TLDP002 GEN1 ' + log_time) in x, logline)))
+            gen2line.extend(list(filter(lambda x: ('TLDP002 GEN2 ' + log_time) in x, logline)))
+            sxmline.extend(list(filter(lambda x: ('TLDP002 SXM ' + log_time) in x, logline)))
+            gen2kline.extend(list(filter(lambda x: ('TLDP002 GEN2K ' + log_time) in x, logline)))
         # Split line
     sortcwline = splitSort(cwline)
     sortgen1line = splitSort(gen1line)
     sortgen2line = splitSort(gen2line)
     sortsxmline = splitSort(sxmline)
+    sortgen2kline = splitSort(gen2kline)
 
-    utility_new.logAnalyze('CW', sortcwline, log_time)
-    utility_new.logAnalyze('GEN1', sortgen1line, log_time)
-    utility_new.logAnalyze('GEN2', sortgen2line, log_time)
-    utility_new.logAnalyze('SXM', sortsxmline, log_time)
+    utility_new_ver1.logAnalyze('CW', sortcwline, log_time)
+    utility_new_ver1.logAnalyze('GEN1', sortgen1line, log_time)
+    utility_new_ver1.logAnalyze('GEN2', sortgen2line, log_time)
+    utility_new_ver1.logAnalyze('GEN2K', sortgen2kline, log_time)
+    utility_new_ver1.logAnalyze('SXM', sortsxmline, log_time)
 
     #Pic作成
-    utility_new.create_Pic('CW',log_time)
-    utility_new.create_Pic('GEN1',log_time)
-    utility_new.create_Pic('GEN2', log_time)
-    utility_new.create_Pic('SXM', log_time)
+    #utility_new_ver1.create_Pic('CW',log_time)
+    #utility_new_ver1.create_Pic('GEN1',log_time)
+    #utility_new_ver1.create_Pic('GEN2', log_time)
+    #utility_new_ver1.create_Pic('GEN2K', log_time)
+    #utility_new_ver1.create_Pic('SXM', log_time)
 
     print(log_time + 'のLogを出力しました。')
 
 if __name__ == '__main__':
-    main('20180709')
+    main('20181012')
 '''
     args = sys.argv
     if len(args)>=2:
