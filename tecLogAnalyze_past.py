@@ -35,11 +35,19 @@ def splitSort(filelist):
 
 
 def main(log_time):
-    cwline = []
-    gen1line = []
-    gen2line = []
-    sxmline = []
-    gen2kline = []
+    now_cwline = []
+    now_gen1line = []
+    now_gen2line = []
+    now_sxmline = []
+    now_gen2kline = []
+
+    past_cwline = []
+    past_gen1line = []
+    past_gen2line = []
+    past_sxmline = []
+    past_gen2kline = []
+
+
     # get logfile list
     for file in os.listdir(log_file_path):
         if fnmatch.fnmatch(file, 'Applinfo.log.[1-9]') or file=='Applinfo.log':
@@ -48,17 +56,17 @@ def main(log_time):
                 data = file.read()
                 logline = data.split('\n')
             # open log file
-            cwline.extend(list(filter(lambda x: ('TLDP002 CW ' + log_time) in x, logline)))
-            gen1line.extend(list(filter(lambda x: ('TLDP002 GEN1 ' + log_time) in x, logline)))
-            gen2line.extend(list(filter(lambda x: ('TLDP002 GEN2 ' + log_time) in x, logline)))
-            sxmline.extend(list(filter(lambda x: ('TLDP002 SXM ' + log_time) in x, logline)))
-            gen2kline.extend(list(filter(lambda x: ('TLDP002 GEN2K ' + log_time) in x, logline)))
+            past_cwline.extend(list(filter(lambda x: ('TLDP002 CW ' + log_time) in x, logline)))
+            past_gen1line.extend(list(filter(lambda x: ('TLDP002 GEN1 ' + log_time) in x, logline)))
+            past_gen2line.extend(list(filter(lambda x: ('TLDP002 GEN2 ' + log_time) in x, logline)))
+            past_sxmline.extend(list(filter(lambda x: ('TLDP002 SXM ' + log_time) in x, logline)))
+            past_gen2kline.extend(list(filter(lambda x: ('TLDP002 GEN2K ' + log_time) in x, logline)))
         # Split line
-    sortcwline = splitSort(cwline)
-    sortgen1line = splitSort(gen1line)
-    sortgen2line = splitSort(gen2line)
-    sortsxmline = splitSort(sxmline)
-    sortgen2kline = splitSort(gen2kline)
+    sortcwline = splitSort(past_cwline)
+    sortgen1line = splitSort(past_gen1line)
+    sortgen2line = splitSort(past_gen2line)
+    sortsxmline = splitSort(past_sxmline)
+    sortgen2kline = splitSort(past_gen2kline)
 
     utility_new_ver1.logAnalyze('CW', sortcwline, log_time)
     utility_new_ver1.logAnalyze('GEN1', sortgen1line, log_time)
